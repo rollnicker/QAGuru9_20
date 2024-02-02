@@ -69,12 +69,12 @@ def test_add_to_cart_from_details():
         response = requests.post(
             url="https://demowebshop.tricentis.com/addproducttocart/details/74/1",
             data={
-                  "product_attribute_74_5_26": 81,
-                  "product_attribute_74_6_27": 83,
-                  "product_attribute_74_3_28": 86,
-                  "addtocart_74.EnteredQuantity": 2
-                  }
-                  )
+                "product_attribute_74_5_26": 81,
+                "product_attribute_74_6_27": 83,
+                "product_attribute_74_3_28": 86,
+                "addtocart_74.EnteredQuantity": 2
+            }
+        )
         cookie = response.cookies.get("Nop.customer")
 
     with step("open shop"):
@@ -87,6 +87,7 @@ def test_add_to_cart_from_details():
 
 
 ...
+
 
 def test_add_to_cart_from_details():
     with step("add product to cart"):
