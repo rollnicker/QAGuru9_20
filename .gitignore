@@ -161,4 +161,4 @@ cython_debug/
 
 # Allure-reports
 .tests/allure-report/
-.allure-results/
+.tests/allure-results/
