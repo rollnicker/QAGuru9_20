@@ -1,0 +1,7 @@
+pytest
+requests
+selene==2.0.0rc7
+webdriver-manager==4.0.1
+curlify
+allure-pytest
+logging
