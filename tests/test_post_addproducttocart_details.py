@@ -122,7 +122,7 @@ def test_add_to_cart_from_details2():
 
 
 @pytest.mark.xfail(reason="Когда добавляю метод post_shop, тест перестает работать")
-def test_add_to_cart_two_products_from_details():
+def test_add_to_cart_two_products_from_details12():
     ADD_PRODUCT = "/addproducttocart/details/"
     with step("add product to cart"):
         response = post_shop(
