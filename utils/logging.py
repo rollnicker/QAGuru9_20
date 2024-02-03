@@ -16,3 +16,4 @@ def post_shop(url, **kwargs):
         allure.attach(body=curl, name="curl", attachment_type=AttachmentType.TEXT, extension="txt")
         print(f"/n {response.request}")
     return response
+
