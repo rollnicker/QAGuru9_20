@@ -8,3 +8,4 @@ def test_open_shop_with_status():
         url=BASE_URL
     )
     assert response.status_code == 200
+

@@ -20,16 +20,18 @@ SUCCESFULL_MESSAGE = 'The product has been added to your <a href="/cart">shoppin
 @allure.title("Проверка добавления нескольких товаров в корзину через страницу детальной информации")
 def test_add_to_cart_two_products_from_details():
     with step("add product to cart"):
-        response = requests.post(
-            url="https://demowebshop.tricentis.com/addproducttocart/details/74/1",
-            data={
-                "product_attribute_74_5_26": 81,
-                "product_attribute_74_6_27": 83,
-                "product_attribute_74_3_28": 86,
-                "addtocart_74.EnteredQuantity": 2
-            }
-        )
-        cookie = response.cookies.get("Nop.customer")
+        ADD_PRODUCT = "/addproducttocart/details/"
+        with step("add product to cart"):
+            response = post_shop(
+                ADD_PRODUCT + "74/1",
+                data={
+                    "product_attribute_74_5_26": 81,
+                    "product_attribute_74_6_27": 83,
+                    "product_attribute_74_3_28": 86,
+                    "addtocart_74.EnteredQuantity": 2
+                }
+            )
+            cookie = response.cookies.get("Nop.customer")
 
     with step("open shop"):
         browser.open(CART_URL)
@@ -76,6 +78,7 @@ def test_add_gift_card_to_cart():
         )
         add_status = response.json()['success']
         message = response.json()['message']
+        print(message)
         assert message == SUCCESFULL_MESSAGE
         assert add_status == True
 
@@ -114,26 +117,15 @@ def test_add_to_cart_from_details2():
 
     sleep(5)
     with step("check product name"):
-        browser.element('.product-name').should(have.text('Smartphone'))
+        browser.all('.product-name').first.should(have.text('Smartphone'))
 
     with step("check product name"):
-        browser.element('.qty-input').should(have.text('Build your own expensive computer'))
+        browser.all('.product-name').second.should(have.text('Build your own expensive computer'))
 
 
-
-@pytest.mark.xfail(reason="Когда добавляю метод post_shop, тест перестает работать")
-def test_add_to_cart_two_products_from_details12():
-    ADD_PRODUCT = "/addproducttocart/details/"
+def test_add_to_cart_from_details3():
     with step("add product to cart"):
-        response = post_shop(
-            ADD_PRODUCT + "details/74/1",
-            data={
-                "product_attribute_74_5_26": 81,
-                "product_attribute_74_6_27": 83,
-                "product_attribute_74_3_28": 86,
-                "addtocart_74.EnteredQuantity": 2
-            }
-        )
+        response = post_shop("/addproducttocart/catalog/43/1/1", allow_redirects=False)
         cookie = response.cookies.get("Nop.customer")
 
     with step("open shop"):
@@ -141,10 +133,27 @@ def test_add_to_cart_two_products_from_details12():
         browser.driver.add_cookie({"name": "Nop.customer", "value": cookie})
         browser.open(CART_URL)
 
-    with step("check product quantity"):
-        browser.element('.qty-input').should(have.value("2"))
+    with step("add product to cart"):
+        response2 = requests.post(
+            url="https://demowebshop.tricentis.com/addproducttocart/details/74/1&quot",
+            data={
+                "product_attribute_74_5_26": 81,
+                "product_attribute_74_6_27": 83,
+                "product_attribute_74_3_28": 86,
+                "addtocart_74.EnteredQuantity": 1
+            },
+            cookies={"name": "Nop.customer", "value": cookie}
+        )
 
-        """
-        Ошибка возвращает:
-        selenium.common.exceptions.InvalidArgumentException: invalid argument: missing 'value'
-        """
+        cookie2 = response2.cookies.get("Nop.customer")
+
+    with step("open shop"):
+        browser.open(CART_URL)
+        browser.driver.add_cookie({"name": "Nop.customer", "value": cookie2})
+        browser.open(CART_URL)
+    sleep(5)
+    with step("check product name"):
+        browser.all('.product-name').first.should(have.text('Smartphone'))
+
+    with step("check product name"):
+        browser.all('.product-name').second.should(have.text('Build your own expensive computer'))
